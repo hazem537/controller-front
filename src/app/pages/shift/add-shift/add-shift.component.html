@@ -1,0 +1,42 @@
+<div class="p-5 h-full bg-gray-100 flex  w-full justify-center  items-center  "> 
+
+  <div class="bg-slate-100 p-5 border-2  border-gray-400 shadow-lg rounded-lg w-3/4 " >
+
+    <h2>Add New Shift </h2>
+    
+    
+    <form [formGroup]="shift_form" (ngSubmit)="onshiftsubmit()" class="w-full flex items-center justify-center">
+      <div  class="w-1/2  " >
+    <div class="flex flex-col gap-2   w-full">
+          <mat-form-field appearance="outline">
+          <mat-label> النوع </mat-label>
+          <mat-select formControlName="type">
+            @for (type of types; track $index) {
+            <mat-option [value]="type">{{ type }} </mat-option>
+            }
+          </mat-select>
+      
+          @if( shift_form.get("type")?.touched &&
+          shift_form.get("type")?.hasError('required')){
+          <mat-error>this.field is required</mat-error>
+          }
+        </mat-form-field>
+      
+      
+      
+        <mat-form-field appearance="outline">
+          <mat-label>اختار اليوم</mat-label>
+          <input matInput formControlName='date'[min]="min" [matDatepicker]="picker">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      
+        <button class=" border border-black rounded  px-4 py-2 font-bold  self-center bg-orange-400 hover:bg-amber-500 duration-300 w-52" [disabled]="!shift_form.valid">
+          حفظ
+        </button>
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
+

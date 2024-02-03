@@ -1,0 +1,140 @@
+<div class="print:hidden grow h-full flex flex-col gap-2">
+  <div class="flex gap-4 w-full justify-center">
+    <div class="flex flex-col p-2 text-2xl font-semibold items-center">
+      <mat-icon class="text-gray-700">schedule</mat-icon>
+      <span>
+        {{ user.shift.type }}
+        {{ user.shift.date | date : "fullDate" : local }}</span
+      >
+    </div>
+
+    <div class="flex flex-col p-2 text-2xl font-semibold items-center">
+      <mat-icon class="text-gray-700">person</mat-icon>
+      <span> {{ user.user.username }}</span>
+    </div>
+
+    <div class="flex flex-col p-2 text-2xl font-semibold items-center">
+      <mat-icon class="text-gray-700">sensor_door</mat-icon>
+      <span> {{ user.detail.machine.name }}</span>
+    </div>
+
+    <div class="flex flex-col p-2 text-2xl font-semibold items-center">
+      <mat-icon class="text-gray-700"> attach_money </mat-icon>
+      <span> {{ user.detail.cash.amount | currency : "EGP" }}</span>
+    </div>
+  </div>
+
+  <button
+    class="text-md py-2 w-1/5 self-center px-4 font-semibold text-lg bg-slate-700 rounded-full text-red-500"
+    (click)="card_lost()"
+  >
+    كارت مفقود
+  </button>
+
+  <form [formGroup]="out_form" class="flex gap-4 items-center ">
+    <div class="flex items-center justify-start flex-col w-1/4 h-full">
+      <mat-form-field appearance="outline" class="">
+        <mat-label>رقم الكارت </mat-label>
+        <input
+          matInput
+          type="number"
+          autofocus
+          formControlName="card_no"
+          #card_no_input
+        />
+      </mat-form-field>
+
+      @if(out_form.get('card_no')?.value){
+      <mat-radio-group aria-label="Select an option" formControlName="type_car">
+        <div class="w-full flex flex-col justify-evenly">
+          @for (item of products; track $index) {
+
+          <mat-radio-button [value]="item">{{ item.name }}</mat-radio-button>
+          }
+        </div>
+      </mat-radio-group>
+      }
+    </div>
+
+    @if(out_form.get('card_no')?.value){
+    <div class="flex flex-col justify-center self-center w-1/2">
+      @if(logdata){
+      <h2>بوابة الدخول : {{ logdata.device }}</h2>
+      <h2>وقت الدخول :{{ logdata.time | date : "medium" : local }}</h2>
+      @if(duration){
+      <h2>المدة بالساعة :{{ duration }}</h2>
+      @if(out_form.get('type_car')?.value){
+      <h2>المطلوب : {{ total | currency : "EGP" }}</h2>
+      <h3></h3>
+      } } }
+    </div>
+    <div class="w-1/4 flex flex-col justify-center">
+      @if( out_form.get("type_car")?.value){
+      <mat-form-field appearance="outline">
+        <mat-label>القيمة المدفوعه</mat-label>
+        <input matInput type="number" [formControl]="paied" />
+      </mat-form-field>
+      @if(paied.value !==null && paied.value - total>= 0){
+
+      <h2>
+        الباقي:
+        {{ paied.value - total | currency : "EGP" }}
+      </h2>
+    
+
+      <button
+        class="bg-amber-500 text-gray-700 text-xl font-bold py-2 px-4 rounded-xl"
+        (click)="save()"
+      >
+        حفظ
+      </button>
+
+      }  }
+    </div>
+
+    }
+  </form>
+</div>
+
+@if(lost_card){
+
+<div class="hidden print:block">
+  @if(!user.user.is_superuser ){
+  <div class="flex flex-col">
+    <span class="text-2xl font-bold"> رقم الدفع :{{ payment_number }} </span>
+    <span> kart mafkood </span>
+    <span> مرحبا بك في : {{ user.detail.machine.Place }} </span>
+    <span> وقت الخروج: {{ now | date : "yyyy-MM-dd hh:mm" }} </span>
+    <span> بوابة الخروج {{ user.detail.machine.name }} </span>
+    <span> القيمة المستحقة : {{ 24 * 5 }} </span>
+    <span> الكاشير:{{ user.user.username }} </span>
+    <span> الشيفت: {{ user.shift.date }} - {{ user.shift.type }} </span>
+  </div>
+
+  }
+</div>
+
+}@else{
+<!-- printing array  if cash is good -->
+<div class="hidden print:block">
+  @if(!user.user.is_superuser && logdata ){
+  <div class="flex flex-col">
+    <span> مرحبا بك في : {{ user.detail.machine.Place }} </span>
+    <span> وقت الدخول: {{ logdata.time | date : "yyyy-MM-dd hh:mm" }} </span>
+    <span> وقت الخروج: {{ now | date : "yyyy-MM-dd hh:mm" }} </span>
+    <span> المده بالساعات : {{ duration }} </span>
+    <span> بوابة الدخول {{ logdata.device }} </span>
+    <span> بوابة الخروج {{ user.detail.machine.name }} </span>
+    <span> بيانات العمبل : {{ out_form.get("type_car")?.value?.name }} </span>
+    <span> القيمة المستحقة : {{ total }} </span>
+    <span> المدفوع : {{ paied.value }} </span>
+    <span> الباقي : {{ paied.value - total }} </span>
+    <span> الكاشير:{{ user.user.username }} </span>
+    <span> الشيفت: {{ user.shift.date }} - {{ user.shift.type }} </span>
+    <span> رقم الكارت : {{ out_form.get("card_no")?.value }} </span>
+    <span> رقم الدفع :{{ payment_number }} </span>
+  </div>
+
+  }
+</div>
+}

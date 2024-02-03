@@ -1,0 +1,37 @@
+<div>
+  <mat-form-field>
+    <mat-label> payment </mat-label>
+
+    <input type="number" [formControl]="payment_no" matInput />
+  </mat-form-field>
+
+  @if(payment_detail) { 
+    @if(payment_detail.card_lost){ 
+        <div class="flex  flex-col ">
+            <h2>
+                {{ payment_detail.machine_out }}
+            </h2>
+            <h2>
+                {{payment_detail.time_out |date:'yyyy-MM-dd EEEE hh:mm'}}
+            </h2>
+            <button class="py-2 px-4 rounded-xl bg-gray-700 text-white  "  
+            (click)="remove_lost_card()">Remove card  lost</button>
+        </div>
+    }@else{
+        <div class="flex flex-col ">
+            <h2>
+                {{ payment_detail.card_no }}
+            </h2>
+            <h2>
+                {{ payment_detail.duration }}
+            </h2>
+            <h2>
+                {{ payment_detail.total }}
+            </h2>
+            <mat-form-field>
+                <input type="number" matInput  [formControl]="offer">
+            </mat-form-field>
+            <button  (click)="add_offer()" class="px-4 py-2 bg-gray-700 text-white rounded-xl disabled:bg-gray-500" [disabled]="!offer.valid" >Add offer</button>
+        </div>
+  } }
+</div>

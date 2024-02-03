@@ -1,0 +1,23 @@
+<div class=" h-full flex flex-col  bg-gra-300  ">
+
+  <mat-form-field class="-p-2">
+    <mat-label>اختار التاريخ</mat-label>
+      <input matInput [formControl]='date' [matDatepicker]="picker">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  
+
+      @if(Addshift){
+        <button mat-raised-button color="primary" [routerLink]="['/add-shift']" >اضافة شيفت</button>
+      }
+      @if (shifts) {
+        <div class="grid grid-cols-2 gap-3 grow   ">
+    
+          @for (item of shifts; track $index) {
+            <app-single-shift [Shift]="item"> </app-single-shift>
+          }
+        </div>
+      }
+      
+   </div>

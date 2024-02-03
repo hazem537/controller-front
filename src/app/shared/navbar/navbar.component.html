@@ -1,0 +1,74 @@
+<mat-toolbar [class]="'header'">
+  <div class="flex justify-between items-center w-full print:hidden">
+    <span [routerLink]="['/']" class="cursor-pointer text-2xl font-bold">
+      ادارة الدخول
+    </span>
+    @if (loginUser && !loginUser.user.is_superuser) {
+    <div class="flex gap-8">
+      <a
+        [routerLink]="['changePassword']"
+        class="p-2 rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
+      >
+        تغير كلمة المرور
+      </a>
+      <a
+        class="cursor-pointer p-2 rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
+      (click)="endshift()"
+        >
+        end shift
+      </a>
+      <a
+        class="cursor-pointer p-2 rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
+      >
+        print Shift Report
+      </a>
+    </div>
+
+    } @if (loginUser?.user?.is_superuser) {
+    <div class="flex gap-2">
+      <button
+        class="p-2 text-xl font-semibold rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
+        [matMenuTriggerFor]="authmenu"
+      >
+        ادارة المستخدمين
+      </button>
+      <mat-menu #authmenu="matMenu">
+        <button mat-menu-item [routerLink]="['changePassword']">
+          تغير كلمة المرور
+        </button>
+        <button mat-menu-item [routerLink]="['adduser']">اضافة مستخدم</button>
+      </mat-menu>
+
+      <button
+        class="p-2 text-xl font-semibold rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
+        [matMenuTriggerFor]="shiftmenu"
+      >
+        الشيفتات
+      </button>
+      <mat-menu #shiftmenu="matMenu">
+        <button mat-menu-item [routerLink]="['shift']">الشيفت الحالي</button>
+        <button mat-menu-item [routerLink]="['day-shift']">
+          الشيفتات المتاحة باليوم
+        </button>
+
+        <button mat-menu-item [routerLink]="['add-shift']">اضافة شيفت</button>
+      </mat-menu>
+
+      <button
+        class="p-2 text-xl font-semibold rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
+        [routerLink]="['/offer']"
+      >
+        mortga3at
+      </button>
+    </div>
+    }
+    @if(loginUser){
+      <button
+        (click)="onLogoutClick()"
+        class="text-red-500 rounded p-2 hover:bg-slate-100 duration-300"
+      >
+        تسجيل الخروج
+      </button>
+    }
+  </div>
+</mat-toolbar>

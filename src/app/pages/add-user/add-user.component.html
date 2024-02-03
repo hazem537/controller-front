@@ -1,0 +1,39 @@
+<div class="grow flex flex-col h-full justify-center items-center  bg-gray-100  ">
+<div class="w-3/4  bg-slate-100 border-2 border-gray-500 p-5 rounded-xl " >
+    <h2 class="self-center">اضاقة مستخدم</h2>
+
+    <div class="flex justify-center items-center  ">
+        <div class="w-1/2">
+          <form
+            [formGroup]="signupForm"
+            (ngSubmit)="onformSubmiit()"
+            class="flex flex-col justify-center"
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>اسم المستخدم</mat-label>
+              <input type="text" matInput formControlName="username" />
+              @if(signupForm.get("username")?.touched &&
+              signupForm.get('username')?.hasError('required')){
+              <mat-error> this field is required</mat-error>
+              }
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>كلمة المرور</mat-label>
+              <input type="text" matInput formControlName="password" />
+              @if(signupForm.get("password")?.touched &&
+              signupForm.get('password')?.hasError('required')){
+              <mat-error> this field is required</mat-error>
+              }
+            </mat-form-field>
+            <button class="py-2 px-4 bg-amber-500 font-bold w-1/2 self-center rounded border border-slate-700 disabled:bg-orange-300  " [disabled]="!signupForm.valid">
+              Add User
+            </button>
+          </form>
+        </div>
+      </div>
+    
+
+</div>
+      
+
+</div>

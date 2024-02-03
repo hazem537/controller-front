@@ -1,0 +1,19 @@
+<div class="  border-2 border-gray-400  shadow-lg p-1 mx-2 bg-slate-100 shdow rounded-lg  " >
+    <div class="flex flex-col  my-6">
+
+        <span class="self-center text-3xl font-bold mt-2" > شيفت  {{Shift.type}} </span>
+        <span class="self-center font-semibold text-2xl " >  {{ Shift.date |date:"fullDate":locale}}</span>
+        <div class="grid grid-cols-2 justify-center">
+        <span class="text-center text-xl font-semibold " >  من  <br>  {{Shift.start|date:"shortTime":locale}} </span>
+         <span class="text-center text-xl font-semibold" >  الي <br> {{Shift.end|date: "shortTime":locale}} </span>
+        </div>
+        
+    </div>
+    <div class=" flex flex-col  ">
+        @for (item of Shift.detail; track $index) {
+            
+            <app-detail [detail]="item" ></app-detail>
+        }
+    </div>
+ 
+</div>

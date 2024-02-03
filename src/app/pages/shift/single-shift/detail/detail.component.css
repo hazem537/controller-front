@@ -1,0 +1,10 @@
+.form-input{
+
+    @apply font-bold text-xl
+}
+mat-label {
+    @apply font-bold
+}
+mat-select-trigger{
+    @apply font-bold text-xl
+}

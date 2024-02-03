@@ -1,0 +1,7 @@
+mat-label{
+    @apply font-bold 
+}
+ input[matInput]{
+    @apply font-bold text-xl
+
+}

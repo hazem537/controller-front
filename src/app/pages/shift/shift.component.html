@@ -1,0 +1,23 @@
+<div class="felx  flex-col  p-5  border h-full  gap-3 grow  bg-gray-100 " >
+
+@if(Addshift){
+  <button  class="  p-2 border-2 rounded border-amber-500 font-bold  hover:text-black hover:bg-amber-500 hover:border-black duration-300 "   [routerLink]="['/add-shift']" >
+    <div class="div flex items-center">
+      اضافة شيفت
+     <mat-icon matTextSuffix=""> add </mat-icon>
+    </div>
+
+    </button>
+}
+@if (shifts) {
+
+    <div class="grid grid-cols-2 gap-3  h-full " [class]="{'grid-cols-2':shifts.length>1 ,'grid-cols-1':shifts.length==1}">
+  
+
+    @for (item of shifts; track $index) {
+      <app-single-shift [Shift]="item"> </app-single-shift>
+    }
+  </div>
+}
+
+</div>

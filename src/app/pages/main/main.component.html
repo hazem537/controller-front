@@ -1,0 +1,8 @@
+<div >
+ 
+ @if(!user.user.is_superuser){
+  <app-main-user [user]="user" [products]="products" ></app-main-user>
+ }@else{
+  <app-main-admin></app-main-admin>
+ }
+</div>

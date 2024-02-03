@@ -1,1 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+@font-face {
+    font-family: 'Cairo'; /* Choose a name for your font */
+    src: url('./assets/Cairo-VariableFont_slnt,wght.ttf') format('truetype'),
+    /* Add more src lines for different font formats if needed */
+  }
+html, body { height: 100%}
+body { margin: 0; font-family:'Cairo', "Helvetica Neue", sans-serif !important; }
