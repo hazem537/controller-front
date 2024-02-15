@@ -1,0 +1,47 @@
+<div class="p-2 flex flex-col justify-around h-full">
+@if (editmode) {
+    <h1>edit Card</h1>
+
+}@else {
+    <h1>add Card</h1>
+
+}
+
+
+  <form
+    (ngSubmit)="form_submit()"
+    [formGroup]="card_form"
+    class="flex flex-col"
+  >
+    <mat-form-field appearance="outline">
+      <mat-label> Card Number</mat-label>
+      <input type="number" matInput formControlName="num" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-select [compareWith]="CompareFn" formControlName="category">
+        @for (cat of categories; track $index) {
+        <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <div class="grid grid-cols-2 gap-3">
+      <button
+        mat-dialog-close
+        type="submit"
+        class="py-2 px-4 border rounded bg-amber-500 font-semibold border-black disabled:bg-gray-700"
+        [disabled]="!card_form.valid"
+      >
+      
+        Add
+      </button>
+      <button
+        mat-dialog-close
+        type="button"
+        class="py-2 px-4 border rounded bg-red-500 font-semibold border-black"
+      >
+        Exit
+      </button>
+    </div>
+  </form>
+</div>

@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, catchError, of, tap, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
-import { Shift, ShiftDetail, shift_form } from '../models/shift.model';
+import { IMainShiftReport, IShiftReport, Shift, ShiftDetail, shift_form } from '../models/shift.model';
 import { userdata } from '../models/user.model';
 
 @Injectable({
@@ -37,6 +37,7 @@ shifts =new BehaviorSubject<Shift[]|null>(null)
         tap((data) => {
           console.log(data);
         }),
+        
         catchError((err) => {
           console.log(err)
 
@@ -71,21 +72,23 @@ shifts =new BehaviorSubject<Shift[]|null>(null)
 
 
 
-  put_shift_detail(user: userdata, shift_detail: ShiftDetail) {
+  put_shift_detail(user: userdata[], shift_detail: ShiftDetail) {
     console.log(user);
+    const arrayOfIds: number[] = user.map(obj => obj.id);
     return this.http
       .patch<{ shift: ShiftDetail; user: userdata }>(
         `${this.apiUrl}shift-detail/${shift_detail.id}`,
         {
-          user: user.id,
+          user:arrayOfIds
         }
       )
       .pipe(
         tap((data) => {
-          console.log(data);
+          // console.log(data);
         }),
         catchError((err) => {
-          console.log(err.error.error);
+          console.log(err)
+          // console.log(err.error.error);
           return throwError(err.error.error);
         })
       );
@@ -105,11 +108,31 @@ shifts =new BehaviorSubject<Shift[]|null>(null)
     );
   }
 
-end_shift_detail(passto:string){
-return this.http.post(`${this.apiUrl}end-shift/`,{passto:passto}).pipe(tap(res=>{
+end_shift_detail(){
+return this.http.post<{shift:IShiftReport}>(`${this.apiUrl}end-shift/`,{}).pipe(tap(res=>{
   console.log(res)
   
 }))
+}
+get_shift_detail(){
+  return this.http.get<{shift:IShiftReport}>(`${this.apiUrl}shift-info/`).pipe(
+    tap(
+      res=>{
+        console.log(res)
+      }
+    )
+  )
+}
+
+// main shift info 
+get_main_shift_info(){
+  return this.http.get<{shift:IMainShiftReport}>(`${this.apiUrl}/main-shift-info/`).pipe(
+    tap(
+      res=>{
+        console.log(res)
+      }
+    )
+  )
 }
 
 }

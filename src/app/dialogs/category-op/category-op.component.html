@@ -1,0 +1,53 @@
+<div class="flex flex-col p-2 h-full border" >
+    <h2>Add category</h2>
+<form  (ngSubmit)="formSubmit()" class="flex flex-col h-full  border" [formGroup]="category_form" >
+    <mat-form-field appearance="outline"> 
+        <mat-label>Category name </mat-label>
+        <input type="text" matInput formControlName="name">
+    </mat-form-field>
+  
+        <mat-radio-group aria-label="Select an option" formControlName="payment_method" class="flex  justify-around gap-3 w-full">
+            <mat-radio-button value="1">pay by time </mat-radio-button>
+            <mat-radio-button value="2">pay subscription </mat-radio-button>
+            <mat-radio-button value="3">no pay </mat-radio-button>
+          </mat-radio-group>
+          @if(category_form.get("payment_method")?.value == 1 ){
+
+            <div formGroupName="payment_detail" class=" grid grid-cols-2 gap-2 ">
+                <mat-form-field appearance="outline">
+                    <mat-label> initial duration</mat-label>
+                    <input type="number" matInput formControlName="intial_duration">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label> initial price</mat-label>
+                    <input type="number" matInput formControlName="intial_price" >
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label> then duration</mat-label>
+                    <input type="number" matInput formControlName="then_duration" >
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label> then price</mat-label>
+                    <input type="number" matInput formControlName="then_price" >
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label> discount duration</mat-label>
+                    <input type="number" matInput formControlName="discount_duration" >
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label> discount price</mat-label>
+                    <input type="number" matInput formControlName="discount_price" >
+                </mat-form-field>
+            </div>
+          }
+          <div class ="grid gap-2 grid-cols-2  ">
+              <button mat-dialog-close  type="submit" class="py-2 px-4 p-2 bg-amber-500 border font-semibold border-black rounded disabled:bg-gray-500"  [disabled]="!category_form.valid">Add</button>
+              <button mat-dialog-close type="button" class="py-2 px-4 p-2 bg-red-500 border  border-black rounded "  >Close</button>
+
+          </div>
+
+        </form>
+</div>

@@ -1,0 +1,52 @@
+<div class="flex flex-col gap-2">
+ 
+  <button
+    (click)="add_card()"
+    class="py-2 px-4 border border-black rounded hover:bg-amber-500 duration-300 font-semibold w-36 self-center"
+  >
+    add card
+  </button>
+
+  <form [formGroup]="filter_form">
+    <div class="grid grid-cols-2 gap-2 w-full">
+      <mat-form-field appearance="outline">
+        <mat-label> Crad number</mat-label>
+        <input
+          type="text"
+          matInput
+          placeholder="search with card number"
+          formControlName="search"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label> Category</mat-label>
+        <mat-select formControlName="category">
+          <mat-option [value]="null">____</mat-option>
+
+          @for (cat of categories; track $index) {
+          <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+
+  @if(isloading){
+  <app-loader class="self-center"></app-loader>
+  }@else{
+  <cdk-virtual-scroll-viewport itemSize="50" class="h-[350px] w-full">
+    <table class="w-full border overflow-auto h-full">
+      <tr class="sticky top-0 bg-gray-50">
+        <th>Card number</th>
+        <th>category</th>
+        <th>action</th>
+      </tr>
+      <tr *cdkVirtualFor="let item of cards">
+        <td>{{ item.num }}</td>
+        <td>{{ (item.category | category)?.name }}</td>
+        <td><button type="button" class="px-2 py-2 rounded-xl border border-black bg-amber-500 font-semibold "  (click)="update_card(item)"  >update</button></td>
+      </tr>
+    </table>
+  </cdk-virtual-scroll-viewport>
+  }
+</div>

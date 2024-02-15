@@ -25,13 +25,19 @@
   >
     <mat-label> المستخدم </mat-label>
     <mat-select 
-      
+      multiple
       [formControl]="user_input"
       [compareWith]="compareFn"
       (valueChange)="onchange($event)"
     >
       @if(user_input.value){
-      <mat-select-trigger>{{ user_input.value.username }} </mat-select-trigger>
+        <mat-select-trigger>
+        @for (item of user_input.value; track $index;let isLast = $last;) {
+
+          {{item.username }}{{ isLast ? '' : ', '}}
+          <!-- {{ user_input.value[0]?.username }}  -->
+        }
+      </mat-select-trigger>
       } @for (item of users; track $index) {
 
       <mat-option [value]="item"> {{ item.username }}</mat-option>

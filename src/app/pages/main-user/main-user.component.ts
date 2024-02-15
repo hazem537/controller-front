@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, JsonPipe } from '@angular/common';
 import {
   Component,
   OnInit,
@@ -18,21 +18,23 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { cashDetailForm } from '../../models/cash.model';
-import { log } from '../../models/log.model';
-import { Product } from '../../models/produc.model';
 import { User } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
 import { CashDetailService } from '../../services/cash-detail.service';
-import { CashService } from '../../services/cash.service';
-import { LogService } from '../../services/log.service';
-import { ProductService } from '../../services/product.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
+import { ParkingSessionService } from '../../services/parking-session.service';
+import { IParkingSession } from '../../models/parkingSession.model';
+import { DurationPipe } from '../../pipes/duration.pipe';
+import { CategoryPipe } from '../../pipes/category.pipe';
+import { CategoryService } from '../../services/category.service';
+import { ICategory } from '../../models/category.model';
+import { ShiftService } from '../../services/shift.service';
+import { IShiftReport } from '../../models/shift.model';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-main-user',
@@ -46,7 +48,10 @@ import { MatRadioModule } from '@angular/material/radio';
     ReactiveFormsModule,
     DatePipe,
     MatIconModule,
-    CurrencyPipe
+    CurrencyPipe,
+    JsonPipe,
+    DurationPipe,
+    CategoryPipe
   ],
   templateUrl: './main-user.component.html',
   styleUrl: './main-user.component.css',
@@ -58,103 +63,103 @@ export class MainUserComponent implements OnInit {
   @ViewChild('card_no_input') card_no_input!: ElementRef;
 
   @Input() user!: User;
-  @Input() products!: Product[];
-  out_form!: FormGroup;
-  logdata!: log | null;
-  now = new Date();
-  duration: any;
-  total: number = 0;
+
+  card_no !: FormControl;
+  category !: FormControl;
+
   payment_number!: number;
   paied!: FormControl;
   lost_card = false;
+  // to print shift detail
+  print_shift_info = false
+  shift_info!: IShiftReport
+
+
+  short_term_cart !: ICategory[]
+  selected_parking_sessoion !: IParkingSession | null;
   constructor(
-    private authService: AuthService,
-    private productService: ProductService,
-    private logService: LogService,
     private cashdetailService: CashDetailService,
-    private datePipe: DatePipe,
     private cdr: ChangeDetectorRef,
     private snakbar: MatSnackBar,
-    private cashService: CashService,
     private renderer: Renderer2,
-    @Inject(LOCALE_ID) public local:string  
+    private categoryService: CategoryService,
+    private shiftService: ShiftService,
 
-  ) {}
+    @Inject(LOCALE_ID) public local: string,
+    private sessionService: ParkingSessionService,
+    private authService:AuthService
+
+  ) { }
   ngOnInit(): void {
-    // this.authService.set_amount(600)
+    this.categoryService.get_all_category().subscribe()
+    this.categoryService.get_short_cat().subscribe(res => { if (res !== null) { this.short_term_cart = res } })
     this.paied = new FormControl(0);
-    this.out_form = new FormGroup({
-      card_no: new FormControl(null, Validators.required),
-      type_car: new FormControl(null, Validators.required),
-    });
+    this.card_no = new FormControl(null, Validators.required),
+      this.category = new FormControl(null, Validators.required),
 
-    // card_no in
-    this.out_form.get('card_no')?.valueChanges.subscribe((value) => {
-      this.logdata = null;
-      this.out_form.get('type_car')?.setValue(null);
-      this.paied.setValue(0);
-      if (!(Math.abs(value).toString().length < 7)) {
-        this.logService.get_log_by(value).subscribe(
-          (res) => {
-            this.logdata = res.data;
-            this.duration = this.get_duration(this.logdata.time);
-            // duration  = this.now - new Date(this.logdata.time)
-          },
-          (error) => {
-            this.snakbar.open('هذا الكارت غير موجود ', 'Dismiss', {
-              duration: 2000,
-            });
-          }
-        );
+
+
+      // card_no in
+      this.card_no.valueChanges.subscribe((value) => {
+        // this.preventDefault()
+        this.paied.setValue(0);
+        this.category.setValue(null)
+        console.log(value)
+        if (!(Math.abs(value).toString().length < 7)) {
+
+          this.sessionService.get_parking_session_data(value).subscribe(
+            res => {
+              if (res !== null) {
+                this.selected_parking_sessoion = res.session
+                this.category.patchValue(this.selected_parking_sessoion.category)
+              }
+            },
+            err => { 
+              this.card_no.patchValue(null)
+              this.snakbar.open(err, "dissmis", { duration: 2000 }) })
+        }
+      });
+
+    this.category.valueChanges.subscribe(value => {
+
+      if (value !== null && value !== this.selected_parking_sessoion?.category) {
+        if (this.selected_parking_sessoion) {
+          this.sessionService.update_parking_session_category(this.selected_parking_sessoion.id, value).subscribe(res => {
+            if (res !== null) {
+              this.selected_parking_sessoion = res.session
+            }
+          })
+        }
       }
-    });
-    if (this.out_form.get('type_car')?.value) {
-      this.total = this.duration * this.out_form.get('type_car')?.value;
+    })
+
+
+  }
+
+  onKeyPress(event:KeyboardEvent){
+    if (event.key === 'Enter') {
+      event.preventDefault()
     }
-    this.out_form.get('type_car')?.valueChanges.subscribe((value) => {
-      if (value) {
-        this.total = this.duration * value.money_per_hour;
-      }
-    });
   }
-  get_duration(intime: any) {
-    return Math.ceil(
-      (new Date().getTime() - new Date(intime).getTime()) / (1000 * 60 * 60)
-    );
-  }
-  save() {
-    // cxall endfpoitn pas dat to it
-    if (this.logdata) {
-      let cash_form: cashDetailForm = {
-        card_no: this.out_form.get('card_no')?.value,
-        log_id: this.logdata?.id,
-        time_out: this.datePipe
-          .transform(this.now, 'yyyy-MM-dd hh:mm')!
-          .toString(),
-        product: this.out_form.get('type_car')?.value.name,
-        product_cost: this.out_form.get('type_car')?.value.money_per_hour,
-        total: this.total.toString(),
-        duration: this.duration,
-        machine_out: this.user.detail.machine.id,
-      };
 
-      this.cashdetailService.addcash(cash_form).subscribe(
-        (res) => {
+  car_out() {
+    if (this.selected_parking_sessoion) {
+      this.sessionService.save_car_out(this.selected_parking_sessoion?.id)
+        .subscribe(res => {
           if (res !== null) {
-            // console.log(res.payment_id)
-            this.payment_number = res.payment_id;
-            this.cdr.detectChanges();
-            // console.log(this.payment_number)
-            print();
-            this.form.resetForm();
-            this.foucsinput();
+            this.selected_parking_sessoion = res.session
+            this.cdr.detectChanges()
+            print()
+            this.card_no.reset()
+            this.selected_parking_sessoion = null
+
+            this.foucsinput()
           }
-        },
-        (err) => {}
-      );
+
+        }
+        )
     }
   }
-
   foucsinput() {
     if (this.card_no_input && this.card_no_input.nativeElement) {
       this.card_no_input.nativeElement.focus();
@@ -173,14 +178,46 @@ export class MainUserComponent implements OnInit {
 
   card_lost() {
     this.lost_card = true;
-    this.cashdetailService.card_lost().subscribe(
-      (res) => {
-        this.payment_number = res.payment_id;
-        this.cdr.detectChanges();
-        print();
-        this.foucsinput();
-      },
-      (err) => {}
-    );
+    this.sessionService.save_lost_card().subscribe(res => {
+      if (res !== null) {
+        this.selected_parking_sessoion = res.session
+
+        this.cdr.detectChanges()
+        print()
+        this.lost_card = false
+        this.selected_parking_sessoion = null
+
+      }
+    })
   }
+
+  get_shift_info() {
+    this.print_shift_info = true
+    this.shiftService.get_shift_detail().subscribe(
+      res => {
+        if (res !== null) {
+          this.shift_info = res.shift
+          this.cdr.detectChanges()
+          print()
+          this.print_shift_info = false
+        }
+      }
+    )
+  }
+
+end_shift(){
+this.print_shift_info=true
+this.shiftService.end_shift_detail().subscribe(
+  res=>{
+    if(res!==null){ 
+      this.shift_info =res.shift
+      this.cdr.detectChanges()
+      print()
+      this.print_shift_info= false
+      this.authService.logout()
+    }
+  }
+)
+}
+
 }

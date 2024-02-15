@@ -9,6 +9,9 @@ import { DayShiftComponent } from './pages/shift/day-shift/day-shift.component';
  import { AuthGuard } from './guard/auth.guard';
 import { LostcardComponent } from './pages/lostcard/lostcard.component';
 import { OffersComponent } from './pages/offers/offers.component';
+import { GateComponent } from './pages/gate/gate.component';
+import { CardComponent } from './pages/card/card.component';
+import { CategoryComponent } from './pages/category/category.component';
 export const routes: Routes = [
     {path:"",component:MainComponent,canActivate:[AuthGuard] },
     {path:"login",component:LoginComponent},
@@ -21,6 +24,14 @@ export const routes: Routes = [
 
     {path:"lost-card",component:LostcardComponent,canActivate:[AuthGuard]},
     {path:"offer",component:OffersComponent,canActivate:[AuthGuard]},
+
+    
+    {path:"gate",component:GateComponent,canActivate:[AuthGuard]},
+    
+    {path:"card",component:CardComponent,canActivate:[AuthGuard]},
+    
+    {path:"category",component:CategoryComponent,canActivate:[AuthGuard]},
+    
 
 ];
 

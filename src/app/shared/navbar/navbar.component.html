@@ -11,17 +11,8 @@
       >
         تغير كلمة المرور
       </a>
-      <a
-        class="cursor-pointer p-2 rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
-      (click)="endshift()"
-        >
-        end shift
-      </a>
-      <a
-        class="cursor-pointer p-2 rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
-      >
-        print Shift Report
-      </a>
+      
+   
     </div>
 
     } @if (loginUser?.user?.is_superuser) {
@@ -60,7 +51,27 @@
       >
         mortga3at
       </button>
+      
+      <button
+        class="p-2 text-xl font-semibold rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
+        [routerLink]="['/gate']"
+      >
+        Gate
+      </button>
+      <button
+        class="p-2 text-xl font-semibold rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
+        [routerLink]="['/card']"
+      >
+        Card
+      </button>
+      <button
+        class="p-2 text-xl font-semibold rounded hover:bg-amber-500 hover:text-slate-700 duration-300"
+        [routerLink]="['/category']"
+      >
+        Category
+      </button>
     </div>
+
     }
     @if(loginUser){
       <button

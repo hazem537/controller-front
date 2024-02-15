@@ -70,6 +70,7 @@ getUser(){
    }
 
    this.User$.next(user_value)
+   localStorage.setItem("user",JSON.stringify(user_value))
   }
 
 }

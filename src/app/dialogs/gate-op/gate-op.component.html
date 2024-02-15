@@ -1,0 +1,63 @@
+<!-- hi in gate op 
+add
+update // chahge data 
+test   test machie and test cams  advanced -->
+<div class="flex flex-col items-center justify-around h-full p-3">
+  <div class=" ">
+    <!-- <button matDialogClose> x</button> -->
+    @if(editmode){
+    <h1>Edit Gate</h1>
+    }@else{
+    <h1>Add Gate</h1>
+    }
+  </div>
+  <form (ngSubmit)="submit_form()" class="w-full" [formGroup]="gate_form">
+    <!-- name -->
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>name</mat-label>
+      <input type="text" matInput formControlName="name" />
+    </mat-form-field>
+    <!--pc_ip-->
+    <div class="grid gap-2 grid-cols-2">
+      <mat-form-field appearance="outline">
+        <mat-label>pc_ip</mat-label>
+        <input type="text" matInput formControlName="pc_ip" />
+      </mat-form-field>
+      <!--ip  -->
+      <mat-form-field appearance="outline">
+        <mat-label>ip </mat-label>
+        <input type="text" matInput formControlName="ip" />
+      </mat-form-field>
+    </div>
+    <div class="grid gap-2 grid-cols-2">
+      <!-- cam_in_ip -->
+      <mat-form-field appearance="outline">
+        <mat-label> cam in ip</mat-label>
+        <input type="text" matInput formControlName="cam_in_ip" />
+      </mat-form-field>
+      <!-- cam_out_ip -->
+      <mat-form-field appearance="outline">
+        <mat-label>cam out ip </mat-label>
+        <input type="text" matInput formControlName="cam_out_ip" />
+      </mat-form-field>
+    </div>
+    <div class="w-full flex justify-center gap-2">
+        
+      <button
+        type="submit"
+        class="py-2 px-8 border border-black font-bold bg-amber-500 rounded disabled:bg-gray-700 disabled:text-white"
+        [disabled]="!gate_form.valid"
+        matDialogClose
+      >
+        @if (editmode) { update } @else { save }
+      </button>
+      <button
+        type="button"
+        matDialogClose
+        class="py-2 px-8 border border-black font-bold bg-red-500 rounded"
+      >
+        Close
+      </button>
+    </div>
+  </form>
+</div>

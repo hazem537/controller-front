@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/navbar/navbar.component';
@@ -13,7 +13,7 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent implements OnInit {
   title = 'controller-front';
-  constructor(private authService:AuthService){}
+  constructor(private authService:AuthService, @Inject(LOCALE_ID) public local: string,){}
   ngOnInit(): void {
     this.authService.autologin()
     

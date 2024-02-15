@@ -56,28 +56,28 @@ import { MainUserComponent } from '../main-user/main-user.component';
   providers: [DatePipe],
 })
 export class MainComponent implements OnInit, AfterViewInit {
-  
+
   user!: User;
   products!: Product[];
-  
+
   constructor(
     private authService: AuthService,
     private productService: ProductService,
     private cashService: CashService,
-  ) {}
-  
+  ) { }
+
   ngOnInit(): void {
 
     this.authService.getUser().subscribe((res) => {
       if (res !== null) {
         this.user = res;
         if (!this.user.user.is_superuser) {
-          this.cashService.getcash().subscribe();
-          this.productService.get_all_products().subscribe((res) => {
-            if (res !== null) {
-              this.products = res;
-            }
-          });
+          // this.cashService.getcash().subscribe();
+          // this.productService.get_all_products().subscribe((res) => {
+          //   if (res !== null) {
+          //     this.products = res;
+          //   }
+          // });
         }
       }
     });
@@ -86,6 +86,6 @@ export class MainComponent implements OnInit, AfterViewInit {
 
 
   }
-  
-  ngAfterViewInit(): void {}
+
+  ngAfterViewInit(): void { }
 }

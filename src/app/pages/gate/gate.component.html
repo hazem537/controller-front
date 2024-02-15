@@ -1,0 +1,43 @@
+<div>
+  <button
+    class="py-2 px-5 bg-amber-500 border font-bold border-black rounded flex items-center"
+    (click)="gate_op()"
+  >
+    <mat-icon>add</mat-icon>
+    <span>Add Gate</span>
+  </button>
+</div>
+<h1>Gates</h1>
+<div class="w-full flex justify-center">
+  @if (loading) {
+  <app-loader></app-loader>
+  }@else{
+  <table class="w-full table-auto">
+    <tr class="">
+      <th>name</th>
+      <th>ip</th>
+      <th>PC ip</th>
+      <th>cam in_ip</th>
+      <th>cam out_ip</th>
+      <th>action</th>
+    </tr>
+@if(gates !== null && gates.length !== 0 ){
+    @for ( gate of gates; track $index) {
+    <tr>
+      <td>{{ gate.name }}</td>
+      <td>{{ gate.ip }}</td>
+      <td>{{ gate.pc_ip }}</td>
+
+      <td>{{ gate.cam_in_ip }}</td>
+      <td>{{ gate.cam_out_ip }}</td>
+      <td class="flex gap-3 justify-center">
+         <button class="py-2 px-4 text-white font-bold rounded bg-amber-500" (click)="edit_gate(gate)">Update </button> 
+         <button class="py-2 px-4  text-white font-bold  rounded  bg-red-500" (click)="delete_gate(gate)">Delete</button>
+         <button class="py-2 px-4  text-white font-bold  rounded  bg-green-500" (click)="test_gate(gate)">Test</button>  
+       </td>
+    </tr>
+    }
+}
+  </table>
+  }
+</div>

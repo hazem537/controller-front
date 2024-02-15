@@ -1,1 +1,164 @@
-<p>main-admin works!</p>
+<div class="flex  flex-col  h-full w-full grow  bg-gray-50">
+<div>
+    input for date
+    input for type
+</div>
+<div class="flex  flex-col  border-2  grow  h-full w-full  gap-2 bg-white ">
+
+    @if (shift_Info) {
+    <div class="flex flex-col items-center gap-2  ">
+        <!-- start header -->
+        <div class="w-full bg-gray-700 text-white  flex justify-between px-2 py-2 rounded  items-baseline ">
+            <span class="text-xl font-semibold">
+                شيفت {{shift_Info.type}}
+                {{shift_Info.date|date:"fullDate":local}}
+            </span>
+            <div class="flex gap-4 justify-center ">
+                <span [matMenuTriggerFor]="CatIn"
+                    class="text-green-500 text-lg font-semibold border border-green-500 rounded-full p-1 flex  gap-2 items-center justify-around ">
+                    <span>{{shift_Info.car_in}}</span>
+                    <span>دخول</span>
+                    <mat-icon>arrow_downward</mat-icon>
+                </span>
+
+                <mat-menu #CatIn="matMenu" class="p-2">
+                    @for (item of shift_Info.car_in_detail; track $index) {
+                    @if (item.count !==0) {
+
+                    <span class="flex justify-between">
+                        <span>
+                            {{(item.category|category)?.name}}
+                        </span>
+                        <span>
+                            {{item.count}}
+                        </span>
+                    </span>
+
+                    }
+                    }
+
+                </mat-menu>
+                <span [matMenuTriggerFor]="CatOut"
+                    class="text-red-500 text-lg font-semibold border border-red-500 rounded-full p-1 flex gap-2 items-center justify-around">
+                    <span>
+                        {{shift_Info.car_out}}
+                    </span>
+                    <span>خروج</span>
+                    <mat-icon>arrow_upward</mat-icon>
+                </span>
+                <mat-menu #CatOut="matMenu" class="p-2 ">
+                    @for (item of shift_Info.car_out_detail; track $index) {
+                    @if (item.count !==0) {
+
+                    <span class="flex justify-between">
+                        <span>
+                            {{(item.category|category)?.name}}
+                        </span>
+                        <span>
+                            {{item.count}}
+                        </span>
+                    </span>
+
+                    }
+                    }
+
+                </mat-menu>
+            </div>
+            <div>
+                <span class="text-xl">
+                    {{shift_Info.all_cash |currency:"EGP"}}
+                </span>
+            </div>
+        </div>
+        <!-- end header -->
+
+    </div>
+    <div class="flex  justify-around  gap-2">
+
+        @for (item of shift_Info.detail; track $index) {
+        <!-- shift start header -->
+        <div class="flex flex-col gap-3 w-full p-2 m-2 bg-gray-200  rounded ">
+            <div class="bg-gray-500 w-full rounded p-2 text-white  flex justify-between">
+                <span class="text-lg font-semibold">
+                    {{item.machine}}
+                </span>
+
+                <span class="text-lg font-semibold">
+                    {{item.user}}
+                </span>
+
+                <span class="text-lg font-semibold">
+                    {{item.cash|currency:"EGP"}}
+                </span>
+
+            </div>
+            <!-- shift end header -->
+            <!-- shift in and out start  -->
+            <div class="flex justify-center gap-3">
+                <span
+                    class="text-green-500 text-lg font-semibold border border-green-500 rounded-full p-1 flex  gap-2 items-center justify-around ">
+                    <span>{{item.car_in}}</span>
+                    <span>دخول</span>
+                    <mat-icon>arrow_downward</mat-icon>
+                </span>
+
+
+                <span
+                    class="text-red-500 text-lg font-semibold border border-red-500 rounded-full p-1 flex gap-2 items-center justify-around">
+                    <span>
+                        {{item.car_out}}
+                    </span>
+                    <span>خروج</span>
+                    <mat-icon>arrow_upward</mat-icon>
+                </span>
+
+            </div>
+            <!-- shift in-out  end  -->
+            <!-- shift in-out-detail start -->
+            <div class="grid grid-cols-2 gap-2 w-full border">
+                <div class=" flex flex-col border bg-green-50 rounded items-center text-lg font-semibold">
+                    @for (item2 of item.car_in_detail; track $index) {
+                    @if(item2.count!==0){
+                    <div class="w-4/5 grid grid-cols-2 text-center ">
+                        <span>
+                            {{(item2.category|category)?.name}}
+                        </span>
+                        <span>
+                            {{item2.count}}
+                        </span>
+                    </div>
+
+
+                    }
+                    }
+                </div>
+
+                <div class="flex flex-col border bg-red-50 rounded items-center  text-lg font-semibold ">
+                    @for (item2 of item.car_out_detail; track $index) {
+                    @if(item2.count!==0){
+                    <div class="w-4/5 grid grid-cols-2 text-center" >
+                        <span>
+                            {{(item2.category|category)?.name}}
+                        </span>
+                        <span>
+                            {{item2.count}}
+                        </span>
+                    </div>
+                    }
+                    }
+                </div>
+            </div>
+            <!-- shift in-out-detail end -->
+
+
+        </div>
+
+        }
+    </div>
+
+
+    }
+
+</div>
+
+</div>

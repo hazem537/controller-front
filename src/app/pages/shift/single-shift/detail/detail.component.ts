@@ -8,8 +8,8 @@ import {
 import { ShiftDetail } from '../../../../models/shift.model';
 // import {} from '@angular/material/input'
 import { MatSelectModule } from '@angular/material/select';
-import { MatExpansionModule} from '@angular/material/expansion';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,7 +30,7 @@ import { CurrencyPipe, JsonPipe } from '@angular/common';
     JsonPipe,
     MatIconModule,
     CurrencyPipe,
-   MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './detail.component.html',
   styleUrl: './detail.component.css',
@@ -55,8 +55,8 @@ export class DetailComponent implements OnInit, OnChanges {
     if (this.detail.user) {
       this.user_input.setValue(this.detail.user);
     }
-    if(this.detail.ended){
-      this.user_input.disable()
+    if (this.detail.ended) {
+      this.user_input.disable();
     }
   }
 
@@ -66,9 +66,10 @@ export class DetailComponent implements OnInit, OnChanges {
   compareFn(o1: userdata, o2: userdata) {
     return o1 && o2 ? o1.id == o2.id : false;
   }
-  onchange(event: userdata) {
+  onchange(event: userdata[]) {
     // console.log(this.user_input.value)
     console.log(event);
+    // return
     // this.detail.User=this.user_input.value
     this.shiftService.put_shift_detail(event, this.detail).subscribe(
       (res) => {
@@ -81,7 +82,7 @@ export class DetailComponent implements OnInit, OnChanges {
           'dismiss',
           { duration: 2000 }
         );
-        this.user_input.setValue(null);
+        this.user_input.setValue(this.detail.user);
       }
     );
   }

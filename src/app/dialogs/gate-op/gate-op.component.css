@@ -1,0 +1,6 @@
+mat-label{
+    @apply font-semibold
+}
+mat-form-field input{
+    @apply  font-bold
+}

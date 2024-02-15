@@ -1,0 +1,10 @@
+th{
+    @apply text-2xl py-2
+}
+td{
+    @apply text-center text-xl py-2
+}
+tr{
+    @apply border-b border-gray-700  ;
+    
+}

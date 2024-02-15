@@ -1,0 +1,9 @@
+tr{
+    @apply text-center text-xl border-b border-gray-400
+}
+th{
+    @apply text-2xl font-semibold
+}
+td{
+    @apply py-2
+}

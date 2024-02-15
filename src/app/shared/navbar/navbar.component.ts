@@ -9,7 +9,6 @@ import { MatMenuModule } from '@angular/material/menu';
 
 import { RouterModule } from '@angular/router';
 import { User } from '../../models/user.model';
-import { EndshiftComponent } from '../../dialogs/endshift/endshift.component';
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -19,6 +18,7 @@ import { EndshiftComponent } from '../../dialogs/endshift/endshift.component';
 })
 export class NavbarComponent implements OnInit {
   constructor(private authService: AuthService,private dialog:MatDialog) {}
+  
   loginUser!:User|null;
   is_authenticated: boolean = false;
   ngOnInit(): void {
@@ -37,7 +37,5 @@ export class NavbarComponent implements OnInit {
   onLogoutClick() {
     this.authService.logout();
   }
-  endshift(){
-this.dialog.open(EndshiftComponent,{width:"500px",height:"200px"})
-  }
+
 }

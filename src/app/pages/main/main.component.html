@@ -1,8 +1,8 @@
-<div >
+<div class="grow w-full h-full flex flex-col  bg-gray-50 p-2">
  
  @if(!user.user.is_superuser){
-  <app-main-user [user]="user" [products]="products" ></app-main-user>
+  <app-main-user [user]="user"></app-main-user>
  }@else{
   <app-main-admin></app-main-admin>
- }
+ }  
 </div>
