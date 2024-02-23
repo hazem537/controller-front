@@ -7,6 +7,9 @@ import { MatRadioModule } from '@angular/material/radio';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ICategory } from '../../models/category.model';
 import { CategoryService } from '../../services/category.service';
+import { Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-category-op',
@@ -16,9 +19,12 @@ import { CategoryService } from '../../services/category.service';
   styleUrl: './category-op.component.css'
 })
 export class CategoryOpComponent implements OnInit {
-  constructor(private categoryService :CategoryService) { }
+  constructor(private categoryService: CategoryService, @Inject(MAT_DIALOG_DATA) public data: { selected_cat: ICategory }) { }
+  // add edit mode to handel update
+  editmode = false
   category_form!: FormGroup
   ngOnInit(): void {
+
     this.category_form = new FormGroup({
       name: new FormControl(null, [Validators.required]),
       payment_method: new FormControl(null, [Validators.required]),
@@ -31,6 +37,18 @@ export class CategoryOpComponent implements OnInit {
         discount_price: new FormControl(null),
       })
     })
+    // check if data come from user or not in dialog data to show if it 
+    // update or create
+    if (this.data) {
+      console.log("start editing")
+      this.category_form.patchValue(this.data.selected_cat)
+      // check if  pay with what 
+//we eill do ok       // in future add pay fied amount add to it
+      //  option we have time 1  -subscription  2- no pay  3
+
+    }
+
+
 
     this.category_form.get("payment_method")?.valueChanges.subscribe((value: number) => {
       console.log(value)
@@ -59,17 +77,17 @@ export class CategoryOpComponent implements OnInit {
       isSubscription: this.category_form.get("payment_method")?.value == 2,
       ...this.category_form.get("payment_detail")?.value
     }
-    if(new_category.intial_duration){
+    if (new_category.intial_duration) {
       new_category.intial_duration = `${new_category.intial_duration}:00:00`
     }
-    if(new_category.then_duration){
+    if (new_category.then_duration) {
       new_category.then_duration = `${new_category.then_duration}:00:00`
     }
-    if(new_category.discount_duration){
+    if (new_category.discount_duration) {
       new_category.discount_duration = `${new_category.discount_duration}:00:00`
     }
     console.log(new_category)
-this.categoryService.add_category(new_category).subscribe()
+    this.categoryService.add_category(new_category).subscribe()
 
   }
 

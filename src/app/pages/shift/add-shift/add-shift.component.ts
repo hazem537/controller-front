@@ -25,10 +25,12 @@ import { MatSnackBar,MatSnackBarModule } from '@angular/material/snack-bar';
 })
 export class AddShiftComponent  implements OnInit{
 constructor(private shiftService:ShiftService,private datePipe :DatePipe,private snakebar:MatSnackBar){}
-types:string[] =["صباحي","مسائي"]
 shift_form!:FormGroup;
 min = new Date()
+types!:string[] 
+
 ngOnInit(): void {
+this.types =this.shiftService.types
 this.min.setDate(this.min.getDate()-1)
   this.shift_form =new FormGroup({
     type : new FormControl("صباحي",Validators.required),

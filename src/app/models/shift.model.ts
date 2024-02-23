@@ -37,7 +37,7 @@ export interface IShiftReport {
     cash: number;
     user:string;
     machine:string
-
+    
 }
 
 export interface IMainShiftReport {

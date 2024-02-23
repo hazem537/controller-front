@@ -83,4 +83,21 @@ test_gate(gate:IGate){
   )
 }
 
+opne_out_gate(){
+return this.http.get<{"message":string}>(`${this.apiUrl}open_out/`).pipe(tap(
+  res=>{
+    console.log(res)
+  }
+))  
+}
+
+opne_in_gate(){
+  return this.http.get<{"message":string}>(`${this.apiUrl}open_in/`).pipe(tap(
+    res=>{
+      console.log(res)
+    }
+  ))  
+  }
+  
+
 }

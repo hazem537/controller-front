@@ -30,7 +30,10 @@ export class CategoryComponent implements OnInit {
       }
     });
   }
-  open_cat_dialog(){
-  this.dialog.open(CategoryOpComponent,{width:"500px",height:"500px"})    
+  open_cat_dialog(item?:ICategory){
+  this.dialog.open(CategoryOpComponent,{width:"500px",height:"500px",data:{
+    selected_cat :item
+  }})    
   }
+
 }

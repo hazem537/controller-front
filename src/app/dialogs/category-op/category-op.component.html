@@ -11,6 +11,7 @@
             <mat-radio-button value="2">pay subscription </mat-radio-button>
             <mat-radio-button value="3">no pay </mat-radio-button>
           </mat-radio-group>
+          <!-- show this window if this is working for time  -->
           @if(category_form.get("payment_method")?.value == 1 ){
 
             <div formGroupName="payment_detail" class=" grid grid-cols-2 gap-2 ">

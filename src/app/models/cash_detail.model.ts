@@ -5,8 +5,8 @@ export interface IDetail{
     cashier: string;
     duration: number;
     id: number;
-    machine_in: string|null;
-    machine_out: string;
+    gate_in: string|null;
+    gate_out: string;
     offer: number;
     product: string;
     product_cost: number;

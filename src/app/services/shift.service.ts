@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, catchError, of, tap, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { IMainShiftReport, IShiftReport, Shift, ShiftDetail, shift_form } from '../models/shift.model';
@@ -12,12 +12,13 @@ import { userdata } from '../models/user.model';
 export class ShiftService {
   private apiUrl = environment.apiUrl;
 
-shifts =new BehaviorSubject<Shift[]|null>(null)
-  constructor(private http: HttpClient, private authServiec: AuthService) {}
+  shifts = new BehaviorSubject<Shift[] | null>(null)
+  types:string[] =["صباحي","مسائي"]
+  constructor(private http: HttpClient, private authServiec: AuthService) { }
   get_active_shift() {
-    return this.http.get<{data:Shift[]}>(`${this.apiUrl}active-shift/`).pipe(
+    return this.http.get<{ data: Shift[] }>(`${this.apiUrl}active-shift/`).pipe(
       tap((data) => {
-        if(data!==null){
+        if (data !== null) {
           this.shifts.next(data.data)
         }
       }),
@@ -31,13 +32,13 @@ shifts =new BehaviorSubject<Shift[]|null>(null)
       })
     );
   }
-  get_day_shift(date:null|string=null) {
-    if(date){
+  get_day_shift(date: null | string = null) {
+    if (date) {
       return this.http.get<Shift[]>(`${this.apiUrl}day-shift/${date}`).pipe(
         tap((data) => {
           console.log(data);
         }),
-        
+
         catchError((err) => {
           console.log(err)
 
@@ -49,7 +50,7 @@ shifts =new BehaviorSubject<Shift[]|null>(null)
           }
         })
       );
-    }else{
+    } else {
       return this.http.get<Shift[]>(`${this.apiUrl}day-shift/`,).pipe(
         tap((data) => {
           console.log(data);
@@ -67,7 +68,7 @@ shifts =new BehaviorSubject<Shift[]|null>(null)
 
 
     }
-    
+
   }
 
 
@@ -79,7 +80,7 @@ shifts =new BehaviorSubject<Shift[]|null>(null)
       .patch<{ shift: ShiftDetail; user: userdata }>(
         `${this.apiUrl}shift-detail/${shift_detail.id}`,
         {
-          user:arrayOfIds
+          user: arrayOfIds
         }
       )
       .pipe(
@@ -98,8 +99,8 @@ shifts =new BehaviorSubject<Shift[]|null>(null)
       tap((res) => {
         console.log(res);
       }),
-      catchError((err) => {
-        if(err.error.non_field_errors){
+      catchError((err ) => {
+        if (err.error.non_field_errors) {
           return throwError("this shit is exist ");
         }
         return throwError(err.error);
@@ -108,31 +109,44 @@ shifts =new BehaviorSubject<Shift[]|null>(null)
     );
   }
 
-end_shift_detail(){
-return this.http.post<{shift:IShiftReport}>(`${this.apiUrl}end-shift/`,{}).pipe(tap(res=>{
-  console.log(res)
-  
-}))
-}
-get_shift_detail(){
-  return this.http.get<{shift:IShiftReport}>(`${this.apiUrl}shift-info/`).pipe(
-    tap(
-      res=>{
-        console.log(res)
-      }
-    )
-  )
-}
+  end_shift_detail() {
+    return this.http.post<{ shift: IShiftReport }>(`${this.apiUrl}end-shift/`, {}).pipe(tap(res => {
+      console.log(res)
 
-// main shift info 
-get_main_shift_info(){
-  return this.http.get<{shift:IMainShiftReport}>(`${this.apiUrl}/main-shift-info/`).pipe(
-    tap(
-      res=>{
-        console.log(res)
-      }
+    }))
+  }
+  get_shift_detail() {
+    return this.http.get<{ shift: IShiftReport }>(`${this.apiUrl}shift-info/`).pipe(
+      tap(
+        res => {
+          console.log(res)
+        }
+      )
     )
-  )
-}
+  }
 
+  // main shift info 
+  get_main_shift_info(date?: string, type?: string) {
+    let params = new HttpParams()
+    if (date) {
+      params = params.append("date", date)
+    }
+    if (type) {
+      params = params.append("type", type)
+    }
+    return this.http.get<IMainShiftReport[]>(`${this.apiUrl}/main-shift/`, { params: params }).pipe(
+      tap(
+        res => {
+          // console.log(res)
+        }
+      )
+    )
+  }
+
+  get_shift_user(){
+    return this.http.get<{user:userdata[]}>(`${this.apiUrl}shift-detail-user/`).pipe(
+      tap(res=>{
+        // console.log(res)
+      }))
+  }
 }

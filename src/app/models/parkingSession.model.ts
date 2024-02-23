@@ -10,5 +10,7 @@ export interface IParkingSession {
     id:number
     cash:number
     cashier:string
-    offer:number
+    offer:number,
+    lost_card:boolean
+    done:boolean
 }

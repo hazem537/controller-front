@@ -1,28 +1,45 @@
 <div class="flex  flex-col  h-full w-full grow  bg-gray-50">
-<div>
-    input for date
-    input for type
-</div>
-<div class="flex  flex-col  border-2  grow  h-full w-full  gap-2 bg-white ">
+<div class="w-full ">
+    <form [formGroup]="filter_form" class=" flex  gap-2  justify-around " >
+        <mat-form-field appearance="outline" class="w-2/3">
+            <mat-label>اختار اليوم</mat-label>
+            <input matInput formControlName='date' [matDatepicker]="picker">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
 
-    @if (shift_Info) {
+          <mat-form-field appearance="outline" class="w-2/3">
+            <mat-label> النوع </mat-label>
+            <mat-select formControlName="type">
+              @for (type of types; track $index) {
+              <mat-option [value]="type">{{ type }} </mat-option>
+              }
+            </mat-select>
+            </mat-form-field>
+
+    </form>
+</div>
+
+<div class="flex  flex-col  border-2  grow  h-full w-full  gap-2 bg-white ">
+@for (shift_item of shift_Info; track $index) {
+    
     <div class="flex flex-col items-center gap-2  ">
         <!-- start header -->
         <div class="w-full bg-gray-700 text-white  flex justify-between px-2 py-2 rounded  items-baseline ">
             <span class="text-xl font-semibold">
-                شيفت {{shift_Info.type}}
-                {{shift_Info.date|date:"fullDate":local}}
+                شيفت {{shift_item.type}}
+                {{shift_item.date|date:"fullDate":local}}
             </span>
             <div class="flex gap-4 justify-center ">
                 <span [matMenuTriggerFor]="CatIn"
                     class="text-green-500 text-lg font-semibold border border-green-500 rounded-full p-1 flex  gap-2 items-center justify-around ">
-                    <span>{{shift_Info.car_in}}</span>
+                    <span>{{shift_item.car_in}}</span>
                     <span>دخول</span>
                     <mat-icon>arrow_downward</mat-icon>
                 </span>
 
                 <mat-menu #CatIn="matMenu" class="p-2">
-                    @for (item of shift_Info.car_in_detail; track $index) {
+                    @for (item of shift_item.car_in_detail; track $index) {
                     @if (item.count !==0) {
 
                     <span class="flex justify-between">
@@ -41,13 +58,13 @@
                 <span [matMenuTriggerFor]="CatOut"
                     class="text-red-500 text-lg font-semibold border border-red-500 rounded-full p-1 flex gap-2 items-center justify-around">
                     <span>
-                        {{shift_Info.car_out}}
+                        {{shift_item.car_out}}
                     </span>
                     <span>خروج</span>
                     <mat-icon>arrow_upward</mat-icon>
                 </span>
                 <mat-menu #CatOut="matMenu" class="p-2 ">
-                    @for (item of shift_Info.car_out_detail; track $index) {
+                    @for (item of shift_item.car_out_detail; track $index) {
                     @if (item.count !==0) {
 
                     <span class="flex justify-between">
@@ -66,7 +83,7 @@
             </div>
             <div>
                 <span class="text-xl">
-                    {{shift_Info.all_cash |currency:"EGP"}}
+                    {{shift_item.all_cash |currency:"EGP"}}
                 </span>
             </div>
         </div>
@@ -75,7 +92,7 @@
     </div>
     <div class="flex  justify-around  gap-2">
 
-        @for (item of shift_Info.detail; track $index) {
+        @for (item of shift_item.detail; track $index) {
         <!-- shift start header -->
         <div class="flex flex-col gap-3 w-full p-2 m-2 bg-gray-200  rounded ">
             <div class="bg-gray-500 w-full rounded p-2 text-white  flex justify-between">

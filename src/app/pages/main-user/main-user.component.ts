@@ -35,6 +35,7 @@ import { ICategory } from '../../models/category.model';
 import { ShiftService } from '../../services/shift.service';
 import { IShiftReport } from '../../models/shift.model';
 import { AuthService } from '../../services/auth.service';
+import { GateService } from '../../services/gate.service';
 
 @Component({
   selector: 'app-main-user',
@@ -77,6 +78,8 @@ export class MainUserComponent implements OnInit {
 
   short_term_cart !: ICategory[]
   selected_parking_sessoion !: IParkingSession | null;
+
+
   constructor(
     private cashdetailService: CashDetailService,
     private cdr: ChangeDetectorRef,
@@ -87,8 +90,8 @@ export class MainUserComponent implements OnInit {
 
     @Inject(LOCALE_ID) public local: string,
     private sessionService: ParkingSessionService,
-    private authService:AuthService
-
+    private authService: AuthService,
+    private gateService: GateService
   ) { }
   ngOnInit(): void {
     this.categoryService.get_all_category().subscribe()
@@ -105,6 +108,8 @@ export class MainUserComponent implements OnInit {
         this.paied.setValue(0);
         this.category.setValue(null)
         console.log(value)
+        this.selected_parking_sessoion = null
+
         if (!(Math.abs(value).toString().length < 7)) {
 
           this.sessionService.get_parking_session_data(value).subscribe(
@@ -114,9 +119,10 @@ export class MainUserComponent implements OnInit {
                 this.category.patchValue(this.selected_parking_sessoion.category)
               }
             },
-            err => { 
+            err => {
               this.card_no.patchValue(null)
-              this.snakbar.open(err, "dissmis", { duration: 2000 }) })
+              this.snakbar.open(err, "dissmis", { duration: 2000 })
+            })
         }
       });
 
@@ -136,7 +142,7 @@ export class MainUserComponent implements OnInit {
 
   }
 
-  onKeyPress(event:KeyboardEvent){
+  onKeyPress(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       event.preventDefault()
     }
@@ -186,10 +192,10 @@ export class MainUserComponent implements OnInit {
         print()
         this.lost_card = false
         this.selected_parking_sessoion = null
-
       }
     })
   }
+
 
   get_shift_info() {
     this.print_shift_info = true
@@ -205,19 +211,48 @@ export class MainUserComponent implements OnInit {
     )
   }
 
-end_shift(){
-this.print_shift_info=true
-this.shiftService.end_shift_detail().subscribe(
-  res=>{
-    if(res!==null){ 
-      this.shift_info =res.shift
-      this.cdr.detectChanges()
-      print()
-      this.print_shift_info= false
-      this.authService.logout()
-    }
+  end_shift() {
+    this.print_shift_info = true
+    this.shiftService.end_shift_detail().subscribe(
+      res => {
+        if (res !== null) {
+          this.shift_info = res.shift
+          this.cdr.detectChanges()
+          print()
+          this.print_shift_info = false
+          this.authService.logout()
+        }
+      }
+    )
   }
-)
-}
+
+  opne_out_gate() {
+
+    this.gateService.opne_out_gate().subscribe(
+      res => {
+        this.snakbar.open("door open succesfuly", "Dissmis", { duration: 2000 })
+      },
+      err => {
+        this.snakbar.open("door  cant  open ", "Dissmis", { duration: 2000 })
+
+      }
+    )
+
+  }
+
+
+  opne_in_gate() {
+
+    this.gateService.opne_in_gate().subscribe(
+      res => {
+        this.snakbar.open("door open succesfuly", "Dissmis", { duration: 2000 })
+      },
+      err => {
+        this.snakbar.open("door  cant  open ", "Dissmis", { duration: 2000 })
+
+      }
+    )
+
+  }
 
 }

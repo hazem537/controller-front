@@ -2,12 +2,14 @@
   <div class="flex gap-4 w-full justify-center">
     <div class="flex flex-col p-2 text-2xl font-semibold items-center">
       <mat-icon class="text-gray-700">schedule</mat-icon>
+
       <span>
         {{ user.shift.type }}
         {{ user.shift.date | date : "fullDate" : local }}</span>
     </div>
 
     <div class="flex flex-col p-2 text-2xl font-semibold items-center">
+      <i class="fa-solid fa-face-smile"> </i>
       <mat-icon class="text-gray-700">person</mat-icon>
       <span> {{ user.user.username }}</span>
     </div>
@@ -24,7 +26,14 @@
   </div>
   <div class="flex justify-center gap-3">
     <button class=" py-2 w-1/5  px-4 font-semibold text-lg bg-red-700 rounded-full text-white"
-      (click)="card_lost()">
+    (click)="opne_in_gate()">
+    open _in
+  </button>
+    <button class=" py-2 w-1/5  px-4 font-semibold text-lg bg-red-700 rounded-full text-white"
+      (click)="opne_out_gate()">
+      open _out
+    </button>
+    <button class=" py-2 w-1/5  px-4 font-semibold text-lg bg-red-700 rounded-full text-white" (click)="card_lost()">
       كارت مفقود
     </button>
     <button class=" py-2 px-4 w-1/5  font-semibold text-lg bg-gray-500 rounded-full text-white "
@@ -32,15 +41,14 @@
       print shift report
     </button>
 
-    <button class=" py-2 px-4 w-1/5  font-semibold text-lg bg-gray-500 rounded-full text-white "
-    (click)="end_shift()">
-    end shift
-  </button>
+    <button class=" py-2 px-4 w-1/5  font-semibold text-lg bg-gray-500 rounded-full text-white " (click)="end_shift()">
+      end shift
+    </button>
 
 
   </div>
 
-  <form  class="flex flex-col gap-4  " >
+  <form class="flex flex-col gap-4  ">
     <mat-form-field appearance="outline">
       <mat-label>رقم الكارت </mat-label>
       <input matInput type="number" autofocus [formControl]="card_no" (keypress)="onKeyPress($event)" #card_no_input />
@@ -111,42 +119,42 @@
 <div class=" hidden print:block">
   <!-- in lost card  -->
   @if (lost_card) {
-    @if (selected_parking_sessoion) {
-    <div class="flex flex-col ">
-      <h2>
-        welcome in hospital gawya
-      </h2>
-      <h2>
-        payment_number : {{selected_parking_sessoion.id}}
-      </h2>
-      <div class="grid grid-cols-2 ">
-        <h3>
-          time_in :{{selected_parking_sessoion.check_in_time|date}}
-        </h3>
-        <h3>
-          time_out :{{selected_parking_sessoion.check_out_time|date}}
-        </h3>
-        <h3>
-          gate_in :{{selected_parking_sessoion.gate_in}}
-        </h3>
-        <h3>
-          gate_out :{{selected_parking_sessoion.gate_out}}
-        </h3>
-        <h3>
+  @if (selected_parking_sessoion) {
+  <div class="flex flex-col ">
+    <h2>
+      welcome in hospital gawya
+    </h2>
+    <h2>
+      payment_number : {{selected_parking_sessoion.id}}
+    </h2>
+    <div class="grid grid-cols-2 ">
+      <h3>
+        time_in :{{selected_parking_sessoion.check_in_time|date}}
+      </h3>
+      <h3>
+        time_out :{{selected_parking_sessoion.check_out_time|date}}
+      </h3>
+      <h3>
+        gate_in :{{selected_parking_sessoion.gate_in}}
+      </h3>
+      <h3>
+        gate_out :{{selected_parking_sessoion.gate_out}}
+      </h3>
+      <h3>
 
-          duration: {{selected_parking_sessoion.duration|duration}}
-        </h3>
-        <h3>
-          money :{{selected_parking_sessoion.amount_paied|currency:"EGP"}}
-        </h3>
-        <h3>
-          categtory:{{(selected_parking_sessoion.category|category)?.name}}
-        </h3>
-        <h3>
-          cashier :{{selected_parking_sessoion.cashier}}
-        </h3>
-      </div>
+        duration: {{selected_parking_sessoion.duration|duration}}
+      </h3>
+      <h3>
+        money :{{selected_parking_sessoion.amount_paied|currency:"EGP"}}
+      </h3>
+      <h3>
+        categtory:{{(selected_parking_sessoion.category|category)?.name}}
+      </h3>
+      <h3>
+        cashier :{{selected_parking_sessoion.cashier}}
+      </h3>
     </div>
+  </div>
 
   }
   }@else{
@@ -189,28 +197,28 @@
   }
   }
   @if (print_shift_info) {
-    @if(shift_info){
+  @if(shift_info){
 
-      {{user.shift.date|date}} <br>
-      {{user.shift.type}} <br>
-      {{user.shift.start|date}} <br>
-      {{user.shift.end |date}} <br>
-      {{shift_info.car_in}} <br>
-      @for (item of shift_info.car_in_detail; track $index) {
-      {{(item.category|category)?.name}} ---{{item.count}}
-      }
-      <br>
-      {{shift_info.car_out}} <br>
-      @for (item of shift_info.car_out_detail; track $index) {
-      {{(item.category|category)?.name}} ---{{item.count}}
-      }
-      <br>
-      {{shift_info.cash|currency:"EGP"}}
+  {{user.shift.date|date}} <br>
+  {{user.shift.type}} <br>
+  {{user.shift.start|date}} <br>
+  {{user.shift.end |date}} <br>
+  {{shift_info.car_in}} <br>
+  @for (item of shift_info.car_in_detail; track $index) {
+  {{(item.category|category)?.name}} ---{{item.count}}
+  }
+  <br>
+  {{shift_info.car_out}} <br>
+  @for (item of shift_info.car_out_detail; track $index) {
+  {{(item.category|category)?.name}} ---{{item.count}}
+  }
+  <br>
+  {{shift_info.cash|currency:"EGP"}}
 
-      <br>
-      {{user.user.username}} -- {{user.detail.machine.name}}
+  <br>
+  {{user.user.username}} -- {{user.detail.machine.name}}
 
-    }
+  }
 
 
   }
